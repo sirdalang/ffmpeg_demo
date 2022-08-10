@@ -3,8 +3,13 @@
 #include <memory>
 #include <list>
 
+#ifdef __cplusplus
+extern "C" 
+{
 #include <libavformat/avformat.h>
 #include <libavcodec/avcodec.h>
+}
+#endif 
 
 class CAVCodecContext
 {
@@ -12,6 +17,7 @@ public:
     CAVCodecContext(const AVCodec* codec);
     ~CAVCodecContext();
 
+    AVCodecContext *get();
     AVCodecContext *codec_ctx__{nullptr};
 private:
     CAVCodecContext(CAVCodecContext&) = delete;
@@ -25,6 +31,7 @@ public:
     CAVFormatContext();
     ~CAVFormatContext();
 
+    AVFormatContext *get();
     AVFormatContext *fmt_ctx__{nullptr};
 private:
     CAVFormatContext(CAVFormatContext&) = delete;

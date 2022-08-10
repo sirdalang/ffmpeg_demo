@@ -9,6 +9,7 @@ class FFProbeDemo
 public:
     FFProbeDemo (std::string const& filename);
     int init();
+    int showStreams();
 private:
     int openFile();
 private:

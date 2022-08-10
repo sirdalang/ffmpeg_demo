@@ -39,8 +39,8 @@ CPPOBJS = $(sort $(CPPOBJS_NOTSORT))
 all: release
 release: $(RELEASE_DIR)/. $(RELEASE_DIR)/src/. $(RELEASE_DIR)/ffprobe_demo/. \
 	$(RELEASE_DIR)/ffhelper/. $(RELEASE_TARGET)
-debug: $(DEBUG_DIR)/. $(DEBUG_DIR)/src/. $(RELEASE_DIR)/ffprobe_demo/. \
-	$(RELEASE_DIR)/ffhelper/. $(DEBUG_TARGET)
+debug: $(DEBUG_DIR)/. $(DEBUG_DIR)/src/. $(DEBUG_DIR)/ffprobe_demo/. \
+	$(DEBUG_DIR)/ffhelper/. $(DEBUG_TARGET)
 .PHONY : clean all release debug
 
 $(RELEASE_TARGET):$(addprefix $(RELEASE_DIR)/,$(OBJS)) $(addprefix $(RELEASE_DIR)/,$(CPPOBJS))

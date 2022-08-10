@@ -12,6 +12,7 @@ int main(int argc, char *argv[])
     FFProbeDemo demo(filename);
 
     demo.init();
+    demo.showStreams();
 
     return 0;
 }

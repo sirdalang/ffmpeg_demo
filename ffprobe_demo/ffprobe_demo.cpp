@@ -1,12 +1,6 @@
 #include "ffprobe_demo.hpp"
 
-#ifdef __cplusplus
-extern "C" 
-{
-#include <libavformat/avformat.h>
-#include <libavcodec/avcodec.h>
-}
-#endif 
+
 
 FFProbeDemo::FFProbeDemo (std::string const& filename)
 {
@@ -35,7 +29,6 @@ int FFProbeDemo::openFile()
     bool fail_flag = false;
 
     AVDictionary *format_opts = nullptr;
-    AVFormatContext *fmt_ctx = nullptr;
     AVInputFormat *iformat = nullptr;
 
     std::shared_ptr<InputFile> &ifile = input_file__;
@@ -50,13 +43,13 @@ int FFProbeDemo::openFile()
         return ret;
     }
 
-    av_dump_format(fmt_ctx, 0, filename, 0);
+    av_dump_format(ifile->fmt_ctx->get(), 0, filename, 0);
 
-    for (i = 0; i < fmt_ctx->nb_streams; ++i)
+    for (i = 0; i < ifile->fmt_ctx->get()->nb_streams; ++i)
     {
         InputStream istream;
 
-        AVStream *stream = fmt_ctx->streams[i];
+        AVStream *stream = ifile->fmt_ctx->get()->streams[i];
         const AVCodec *codec = nullptr;
 
         istream.st = stream;
@@ -78,7 +71,7 @@ int FFProbeDemo::openFile()
 
         istream.dec_ctx = std::make_shared<CAVCodecContext>(codec);
 
-        if (avcodec_open2(istream.dec_ctx->codec_ctx__, codec, nullptr) < 0)
+        if (avcodec_open2(istream.dec_ctx->get(), codec, nullptr) < 0)
         {
             xerror ("Open codec for input stream %d failed\n",
                 stream->index);
@@ -98,4 +91,32 @@ int FFProbeDemo::openFile()
     }
 
     return 0;
+}
+
+int FFProbeDemo::showStreams()
+{
+    std::shared_ptr<InputFile> &ifile = input_file__;
+
+    for (auto it = ifile->streams.begin(); it != ifile->streams.end(); ++it)
+    {
+        AVCodecParameters *par = nullptr;
+        AVStream *stream = it->st;
+        AVCodecContext *dec_ctx = nullptr;
+        const AVCodecDescriptor *cd;
+
+        par = stream->codecpar;
+        dec_ctx = it->dec_ctx->get();
+        
+        if ((cd = avcodec_descriptor_get(par->codec_id))) 
+        {
+            xinfo("codec_name:%s", cd->name);
+            xinfo("codec_long_name:%s",
+                        cd->long_name ? cd->long_name : "unknown");
+        } 
+        else 
+        {
+            xinfo("codec_name:%s", "unknown");
+            xinfo("codec_long_name:%s", "unknown");
+        }
+    }
 }

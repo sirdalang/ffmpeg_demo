@@ -26,6 +26,11 @@ CAVCodecContext::~CAVCodecContext()
     }
 }
 
+AVCodecContext *CAVCodecContext::get()
+{
+    return codec_ctx__;
+}
+
 CAVFormatContext::CAVFormatContext()
 {
     fmt_ctx__ = avformat_alloc_context();
@@ -48,4 +53,9 @@ CAVFormatContext::~CAVFormatContext()
         avformat_free_context(fmt_ctx__);
         fmt_ctx__ = nullptr;
     }
+}
+
+AVFormatContext *CAVFormatContext::get()
+{
+    return fmt_ctx__;
 }
