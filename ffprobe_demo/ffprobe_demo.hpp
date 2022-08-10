@@ -13,4 +13,5 @@ private:
     int open_file();
 private:
     std::string filename__;
+    std::shared_ptr<InputFile> input_file__;
 };

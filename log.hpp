@@ -6,3 +6,4 @@
 	__FILE__,__LINE__,__FUNCTION__);printf(x);} while (0)
 #define xerror(x...) do {printf("[error][%s %d %s]", \
 	__FILE__,__LINE__,__FUNCTION__);printf(x);} while (0)
+	
