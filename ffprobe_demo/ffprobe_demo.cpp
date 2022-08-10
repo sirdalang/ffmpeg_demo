@@ -17,11 +17,9 @@ FFProbeDemo::FFProbeDemo (std::string const& filename)
 
 int FFProbeDemo::init()
 {
-    int err = 0;
-
     const char *filename = filename__.c_str();
     
-    if (open_file() < 0)
+    if (openFile() < 0)
     {
         xerror("open file %s failed\n", filename);
         return -1;
@@ -30,9 +28,9 @@ int FFProbeDemo::init()
     return 0;
 }
 
-int FFProbeDemo::open_file()
+int FFProbeDemo::openFile()
 {
-    int i = 0;
+    unsigned int i = 0;
     int ret = 0;
     bool fail_flag = false;
 

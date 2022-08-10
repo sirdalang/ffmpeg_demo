@@ -6,12 +6,13 @@ TARGET=ffmpegdemo
 CC = gcc
 CPP = g++
 
-SRC_DIRS := .
+SRC_DIRS := . ffprobe_demo ffhelper
 RELEASE_DIR := release
 DEBUG_DIR := debug
 
-CFLAGS = -Wall
-LFLAGS = -L. -lpthread -l
+CFLAGS = -Wall -std=c++11 -Iffprobe_demo -Iffhelper -I.
+# LFLAGS = -L. -lpthread -lavformat -lavutil -lswscale -lswresample -lavcodec 
+LFLAGS = -lpthread -lavformat  -lavcodec  
 
 RFLAGS = -O2
 DFLAGS = -g
@@ -36,8 +37,10 @@ CPPOBJS = $(sort $(CPPOBJS_NOTSORT))
 	mkdir -m 777 -p $*
 
 all: release
-release: $(RELEASE_DIR)/. $(RELEASE_DIR)/src/. $(RELEASE_TARGET)
-debug: $(DEBUG_DIR)/. $(DEBUG_DIR)/src/. $(DEBUG_TARGET)
+release: $(RELEASE_DIR)/. $(RELEASE_DIR)/src/. $(RELEASE_DIR)/ffprobe_demo/. \
+	$(RELEASE_DIR)/ffhelper/. $(RELEASE_TARGET)
+debug: $(DEBUG_DIR)/. $(DEBUG_DIR)/src/. $(RELEASE_DIR)/ffprobe_demo/. \
+	$(RELEASE_DIR)/ffhelper/. $(DEBUG_TARGET)
 .PHONY : clean all release debug
 
 $(RELEASE_TARGET):$(addprefix $(RELEASE_DIR)/,$(OBJS)) $(addprefix $(RELEASE_DIR)/,$(CPPOBJS))

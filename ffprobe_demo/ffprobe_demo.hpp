@@ -10,7 +10,7 @@ public:
     FFProbeDemo (std::string const& filename);
     int init();
 private:
-    int open_file();
+    int openFile();
 private:
     std::string filename__;
     std::shared_ptr<InputFile> input_file__;
