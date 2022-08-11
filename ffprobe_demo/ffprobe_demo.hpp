@@ -10,6 +10,7 @@ public:
     FFProbeDemo (std::string const& filename);
     int init();
     int showStreams();
+    int getContext(std::shared_ptr<InputFile> &input_file);
 private:
     int openFile();
 private:

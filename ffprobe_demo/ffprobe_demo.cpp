@@ -109,14 +109,24 @@ int FFProbeDemo::showStreams()
         
         if ((cd = avcodec_descriptor_get(par->codec_id))) 
         {
-            xinfo("codec_name:%s", cd->name);
-            xinfo("codec_long_name:%s",
+            xinfo("codec_name:%s\n", cd->name);
+            xinfo("codec_long_name:%s\n",
                         cd->long_name ? cd->long_name : "unknown");
         } 
         else 
         {
-            xinfo("codec_name:%s", "unknown");
-            xinfo("codec_long_name:%s", "unknown");
+            xinfo("codec_name:%s\n", "unknown");
+            xinfo("codec_long_name:%s\n", "unknown");
         }
     }
+
+    return 0;
+}
+
+int FFProbeDemo::getContext(std::shared_ptr<InputFile> &input_file)
+{
+    input_file = input_file__;
+    input_file__.reset();
+
+    return 0;
 }
