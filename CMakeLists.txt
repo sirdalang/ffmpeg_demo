@@ -22,4 +22,7 @@ include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/ffprobe_demo)
 include_directories(${PROJECT_SOURCE_DIR}/ffhelper)
 
+SET(CMAKE_BUILD_TYPE "Debug")
+# SET(CMAKE_BUILD_TYPE "Release")
+
 add_executable(${PROJECT_NAME} ${SRC_FFPROBE_DEMO} ${SRC_FFHELPER} ${SRC_ROOT})
