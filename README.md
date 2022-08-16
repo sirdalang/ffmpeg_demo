@@ -6,6 +6,8 @@ Some ffmpeg demos. May be useful!
 ubuntu/x64
 ../ffmpeg/configure --prefix=$(pwd)/output  --disable-x86asm
 
+sudo apt-get install ffmpeg libavformat-dev libavcodec-dev libavutil-dev libswscale-dev libswresample-dev -y
+
 ## valgrind
 
 使用 valgrind 检查内存泄漏的时候，存在一些误报，举例如下：  
