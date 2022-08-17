@@ -61,4 +61,12 @@ int FFProbeDemo::showStreams()
     return 0;
 }
 
+void FFProbeDemo::getInfo(std::shared_ptr<MediaInfo> &info)
+{
+    info__.reset();
+    info__ = std::make_shared<MediaInfo>();
+
+    getStreamInfo(info__);
+}
+
 NAMESPACE_FFMPEG_DEMO_END
