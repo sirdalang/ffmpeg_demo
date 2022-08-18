@@ -10,7 +10,7 @@ sudo apt-get install ffmpeg libavformat-dev libavcodec-dev libavutil-dev libswsc
 
 ## valgrind
 
-使用 valgrind 检查内存泄漏的时候，存在一些误报，举例如下：  
+对于 ubuntu 直接安装的ffmpeg 库，使用 valgrind 检查内存泄漏的时候，存在一些误报，举例如下：  
 
 ```C
 #include <libavformat/avformat.h>
@@ -50,3 +50,13 @@ int main()
 ```
 
 所有的项都是由 _dl_init 引起的，这应该是 libavforamt 库内部的一些链接执行函数的内存使用，可以忽略。  
+
+备注：
+以下版本经验证不存在泄露问题
+libavutil      57. 30.100 / 57. 30.100
+libavcodec     59. 39.100 / 59. 39.100
+libavformat    59. 29.100 / 59. 29.100
+libavdevice    59.  8.101 / 59.  8.101
+libavfilter     8. 46.100 /  8. 46.100
+libswscale      6.  8.101 /  6.  8.101
+libswresample   4.  8.100 /  4.  8.100
