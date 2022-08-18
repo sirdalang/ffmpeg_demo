@@ -4,7 +4,7 @@
 
 NAMESPACE_FFMPEG_DEMO_BEGIN
 
-CAVCodecContext::CAVCodecContext(const AVCodec* codec)
+WrapAVCodecContext::WrapAVCodecContext(const AVCodec* codec)
 {
     codec_ctx = avcodec_alloc_context3(codec);
     if (nullptr == codec_ctx)
@@ -15,7 +15,7 @@ CAVCodecContext::CAVCodecContext(const AVCodec* codec)
     codec_ctx_backup__ = codec_ctx;
 }
 
-CAVCodecContext::~CAVCodecContext()
+WrapAVCodecContext::~WrapAVCodecContext()
 {
     if (codec_ctx_backup__ != codec_ctx)
     {
@@ -28,12 +28,12 @@ CAVCodecContext::~CAVCodecContext()
     }
 }
 
-AVCodecContext *CAVCodecContext::get()
+AVCodecContext *WrapAVCodecContext::get()
 {
     return codec_ctx;
 }
 
-CAVFormatContext::CAVFormatContext()
+WrapAVFormatContext::WrapAVFormatContext()
 {
     fmt_ctx = avformat_alloc_context();
     if (nullptr == fmt_ctx)
@@ -47,7 +47,7 @@ CAVFormatContext::CAVFormatContext()
     fmt_ctx_backup__ = fmt_ctx;
 }
 
-CAVFormatContext::~CAVFormatContext()
+WrapAVFormatContext::~WrapAVFormatContext()
 {
     if (fmt_ctx_backup__ != fmt_ctx)
     {
@@ -69,9 +69,34 @@ CAVFormatContext::~CAVFormatContext()
     }
 }
 
-AVFormatContext *CAVFormatContext::get()
+AVFormatContext *WrapAVFormatContext::get()
 {
     return fmt_ctx;
+}
+
+WrapAVPacket::WrapAVPacket()
+{
+    av_packet__ = av_packet_alloc();
+    if (nullptr == av_packet__)
+    {
+        xerror ("alloc packet failed\n");
+    }
+    av_packet_backup__ = av_packet__;
+}
+
+WrapAVPacket::~WrapAVPacket()
+{
+    if (av_packet__ != av_packet_backup__)
+    {
+        xerror ("pointer changed\n");
+    }
+
+    if (nullptr != av_packet__)
+    {
+        av_packet_free(&av_packet__);
+        av_packet__ = nullptr;
+        av_packet_backup__ = nullptr;
+    }
 }
 
 int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &input_file)
@@ -86,7 +111,7 @@ int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &inp
     std::shared_ptr<InputFile> &ifile = input_file;
     const char *filename = file.c_str();
 
-    ifile->fmt_ctx = std::make_shared<CAVFormatContext>();
+    ifile->fmt_ctx = std::make_shared<WrapAVFormatContext>();
 
     if ((ret = avformat_open_input(&ifile->fmt_ctx->fmt_ctx, filename,
             iformat, &format_opts)) < 0)
@@ -96,7 +121,7 @@ int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &inp
     }
     else
     {
-        ifile->fmt_ctx->alloc_src = CAVFormatContext::SRC_AVFORMAT_OPEN_INPUT;
+        ifile->fmt_ctx->alloc_src = WrapAVFormatContext::SRC_AVFORMAT_OPEN_INPUT;
     }
 
     if ((ret = avformat_find_stream_info(ifile->fmt_ctx->get(), nullptr)) < 0)
@@ -131,7 +156,7 @@ int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &inp
             continue;
         }
 
-        istream.dec_ctx = std::make_shared<CAVCodecContext>(codec);
+        istream.dec_ctx = std::make_shared<WrapAVCodecContext>(codec);
 
         if (avcodec_parameters_to_context(istream.dec_ctx->get(),
                 stream->codecpar) < 0)
