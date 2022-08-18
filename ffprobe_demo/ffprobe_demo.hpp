@@ -23,6 +23,8 @@ private:
 
     void addStreamInfo(StreamInfo& ref, const char *key, const char *value);
     void addStreamInfo(StreamInfo& ref, const char *key, int value);
+    void addStreamInfo(StreamInfo& ref, const char *key, int64_t value);
+    void addStreamInfo(StreamInfo& ref, const char *key, const AVRational &r);
 private:
     std::string filename__;
     std::shared_ptr<InputFile> input_file__;

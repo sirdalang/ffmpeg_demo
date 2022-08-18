@@ -2,7 +2,9 @@
 
 #include "log.hpp"
 
-#define UNKNOWN "unknown"
+#define STR_BUF_SIZE    (64)
+#define UNKNOWN         "unknown"
+#define NUM_UNKNOWN     (-1)
 
 NAMESPACE_FFMPEG_DEMO_BEGIN
 
@@ -76,11 +78,13 @@ void FFProbeDemo::getInfo(std::shared_ptr<MediaInfo> &info)
 void FFProbeDemo::getStreamInfo(MediaInfo &info)
 {
     int index = 0;
-    char mainkey[256];
+    char mainkey[STR_BUF_SIZE];
+    char buffer[STR_BUF_SIZE];
     const char *keyname = nullptr;
 
-    const AVCodecDescriptor *cd;
-    AVCodecParameters *par;
+    const AVCodecDescriptor *cd = nullptr;
+    AVCodecParameters *par = nullptr;
+    AVCodecContext *dec_ctx = nullptr;
     const char *cstr = nullptr;
 
     auto &ifile = input_file__;
@@ -91,6 +95,7 @@ void FFProbeDemo::getStreamInfo(MediaInfo &info)
         StreamInfo stinfo;
 
         par = it->st->codecpar;
+        dec_ctx = it->dec_ctx->get();
         
         addStreamInfo(stinfo, "index", it->st->index);
         addStreamInfo(stinfo, "id", it->st->id);
@@ -107,11 +112,15 @@ void FFProbeDemo::getStreamInfo(MediaInfo &info)
             addStreamInfo(stinfo, "codec_long_name", UNKNOWN);
         }
 
-        keyname = "profile";
+#if 1
+        cstr = avcodec_profile_name(par->codec_id, par->profile);
+        addStreamInfo(stinfo, "profile", cstr ? cstr : UNKNOWN);
+#else    
+        keyname = "profile";    
         if (cstr = avcodec_profile_name(par->codec_id, par->profile))
         {
             addStreamInfo(stinfo, keyname, cstr);
-        }
+        } 
         else
         {
             if (par->profile != FF_PROFILE_UNKNOWN)
@@ -123,26 +132,66 @@ void FFProbeDemo::getStreamInfo(MediaInfo &info)
                 addStreamInfo(stinfo, keyname, UNKNOWN);
             }
         }
+#endif
 
-        keyname = "codec_type";
         cstr = av_get_media_type_string(par->codec_type);
-        if (cstr)
-        {
-            addStreamInfo(stinfo, keyname, cstr);
-        }
-        else
-        {
-            addStreamInfo(stinfo, keyname, UNKNOWN);
-        }
+        addStreamInfo(stinfo, "codec_type", cstr ? cstr : UNKNOWN);
 
         switch (par->codec_type)
         {
             case AVMEDIA_TYPE_VIDEO:
             {
-                addStreamInfo (stinfo, "width", par->width);
+                addStreamInfo(stinfo, "width", par->width);
+                addStreamInfo(stinfo, "height", par->height);
+                addStreamInfo(stinfo, "coded_width", dec_ctx->coded_width);
+                addStreamInfo(stinfo, "coded_height", dec_ctx->coded_height);
+                addStreamInfo(stinfo, "has_b_frames", par->video_delay);
+
+                cstr = av_get_pix_fmt_name((AVPixelFormat)par->format);
+                addStreamInfo(stinfo, "pix_fmt", cstr ? cstr : UNKNOWN);
+                addStreamInfo(stinfo, "level", par->level);
+
+                cstr = av_color_range_name(par->color_range);
+                addStreamInfo(stinfo, "color_range", cstr ? cstr : UNKNOWN);
+
+                cstr = av_color_space_name(par->color_space);
+                addStreamInfo(stinfo, "color_space", cstr ? cstr : UNKNOWN);
+
+                cstr = av_color_transfer_name(par->color_trc);
+                addStreamInfo(stinfo, "color_transfer", cstr ? cstr : UNKNOWN);
+
+                cstr = av_color_primaries_name(par->color_primaries);
+                addStreamInfo(stinfo, "color_primaries", cstr ? cstr : UNKNOWN);
+
+                cstr = av_chroma_location_name(par->chroma_location);
+                addStreamInfo(stinfo, "chroma_location", cstr ? cstr : UNKNOWN);
+                break;
+            }
+            case AVMEDIA_TYPE_AUDIO:
+            {
+                cstr = av_get_sample_fmt_name((AVSampleFormat)par->format);
+                addStreamInfo(stinfo, "sample_fmt", cstr ? cstr : UNKNOWN);
+
+                addStreamInfo(stinfo, "sample_rate", par->sample_rate);
+                addStreamInfo(stinfo, "channels", par->ch_layout.nb_channels);
+                addStreamInfo(stinfo, "bits_per_sample", av_get_bits_per_sample(par->codec_id));
+
                 break;
             }
         }
+
+        addStreamInfo(stinfo, "r_frame_rate", it->st->r_frame_rate);
+        addStreamInfo(stinfo, "avg_frame_rate", it->st->avg_frame_rate);
+        addStreamInfo(stinfo, "time_base", it->st->time_base);
+        addStreamInfo(stinfo, "start_pts", it->st->start_time);
+        addStreamInfo(stinfo, "duration_ts", it->st->duration);
+
+        addStreamInfo(stinfo, "bit_rate", 
+            par->bit_rate > 0 ? par->bit_rate : NUM_UNKNOWN);
+        addStreamInfo(stinfo, "bits_per_raw_sample", 
+            dec_ctx->bits_per_raw_sample > 0 ?
+            dec_ctx->bits_per_raw_sample : NUM_UNKNOWN);
+        addStreamInfo(stinfo, "nb_frames", it->st->nb_frames);
 
         snprintf (mainkey, sizeof(mainkey), "stream_index_%d", index);
         info.push_back(std::make_pair(std::string(mainkey), stinfo));
@@ -156,22 +205,35 @@ void FFProbeDemo::getStreamInfo(MediaInfo &info)
 void FFProbeDemo::addStreamInfo(StreamInfo& ref, 
     const char *key, const char *value)
 {
-    std::string str_key(key);
-    std::string str_value(value);
-
-    ref.push_back(std::make_pair(str_key, str_value));
+    ref.push_back(std::make_pair(
+        std::string(key), std::string(value)));
 }
 
 void FFProbeDemo::addStreamInfo(StreamInfo& ref, 
     const char *key, int value)
 {
-    char cs_value[64];
+    char cs_value[STR_BUF_SIZE];
     snprintf (cs_value, sizeof(cs_value), "%d", value);
+    ref.push_back(std::make_pair(
+        std::string(key), std::string(cs_value)));
+}
 
-    std::string str_key(key);
-    std::string str_value(cs_value);
+void FFProbeDemo::addStreamInfo(StreamInfo& ref, 
+    const char *key, int64_t value)
+{
+    char cs_value[STR_BUF_SIZE];
+    snprintf (cs_value, sizeof(cs_value), "%ld", value);
+    ref.push_back(std::make_pair(
+        std::string(key), std::string(cs_value)));
+}
 
-    ref.push_back(std::make_pair(str_key, str_value));
+void FFProbeDemo::addStreamInfo(StreamInfo &ref, 
+    const char *key, const AVRational &r)
+{
+    char cs_value[STR_BUF_SIZE];
+    snprintf (cs_value, sizeof(cs_value), "%d/%d", r.num, r.den);
+    ref.push_back(std::make_pair(
+            std::string(key), std::string(cs_value)));
 }
 
 NAMESPACE_FFMPEG_DEMO_END

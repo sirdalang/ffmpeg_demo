@@ -4,7 +4,7 @@ Some ffmpeg demos. May be useful!
 ## build ffmpeg
 
 ubuntu/x64
-../ffmpeg/configure --prefix=$(pwd)/output  --disable-x86asm --disable-stripping
+../ffmpeg/configure --prefix=$(pwd)/output  --disable-x86asm --disable-stripping --disable-static --enable-shared --disable-autodetect
 
 sudo apt-get install ffmpeg libavformat-dev libavcodec-dev libavutil-dev libswscale-dev libswresample-dev -y
 
