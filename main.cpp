@@ -1,6 +1,10 @@
-#include "ffprobe_demo.hpp"
+#include <thread>
+#include <chrono>
 
-USING_NAMESPACE_FFMPEG_DEMO;
+#include "ffprobe_demo.hpp"
+#include "ffplay_demo.hpp"
+
+USING_NAMESPACE_FFMPEG_DEMO
 
 int probe_test(const char *char_filename)
 {
@@ -30,6 +34,27 @@ int probe_test(const char *char_filename)
     return 0;
 }
 
+int play_test(const char *filename)
+{
+    std::string str_filename(filename);
+
+    FFPlayDemo player(str_filename);
+
+    if (player.init() < 0)
+    {
+        printf ("init failed\n");
+        return -1;
+    }
+
+    player.control(FFPlayDemo::CtlType::PLAY);
+
+    while (true)
+    {
+        player.exec();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    }
+}
+
 int main(int argc, char *argv[])
 {
     if (argc < 2)
@@ -38,7 +63,8 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    probe_test(argv[1]);
+    // probe_test(argv[1]);
+    play_test(argv[1]);
 
     return 0;
 }

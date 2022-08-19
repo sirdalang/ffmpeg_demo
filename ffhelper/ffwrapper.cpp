@@ -88,7 +88,7 @@ WrapAVPacket::~WrapAVPacket()
 {
     if (av_packet__ != av_packet_backup__)
     {
-        xerror ("pointer changed\n");
+        xerror("pointer changed\n");
     }
 
     if (nullptr != av_packet__)
@@ -97,6 +97,41 @@ WrapAVPacket::~WrapAVPacket()
         av_packet__ = nullptr;
         av_packet_backup__ = nullptr;
     }
+}
+
+AVPacket *WrapAVPacket::get()
+{
+    return av_packet__;
+}
+
+WrapAVFrame::WrapAVFrame()
+{
+    av_frame__ = av_frame_alloc();
+    if (nullptr == av_frame__)
+    {
+        xerror("alloc frame failed\n");
+    }
+    av_frame_backup__ = av_frame__;
+}
+
+WrapAVFrame::~WrapAVFrame()
+{
+    if (av_frame__ != av_frame_backup__)
+    {
+        xerror("pointer changed\n");
+    }
+
+    if (nullptr != av_frame__)
+    {
+        av_frame_free(&av_frame__);
+        av_frame__ = nullptr;
+        av_frame_backup__ = nullptr;
+    }
+}
+
+AVFrame *WrapAVFrame::get()
+{
+    return av_frame__;
 }
 
 int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &input_file)

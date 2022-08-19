@@ -1,5 +1,7 @@
 #pragma once
 
+#include <assert.h>
+
 #define NAMESPACE_FFMPEG_DEMO_BEGIN \
     namespace ffdemo {
 
@@ -7,5 +9,8 @@
     }
 
 #define USING_NAMESPACE_FFMPEG_DEMO \
-    using namespace ffdemo
+    using namespace ffdemo;
+
+#define FF_DEMO_ASSERT(expr) \
+    assert(expr)
 

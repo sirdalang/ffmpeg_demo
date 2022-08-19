@@ -16,6 +16,7 @@ set(USER_FFMPEG_INC_DIR /home/test/opensrc/ffmpeg/build/output/include)
 
 aux_source_directory(. SRC_ROOT)
 aux_source_directory(ffprobe_demo SRC_FFPROBE_DEMO)
+aux_source_directory(ffplay_demo SRC_FFPLAY_DEMO)
 aux_source_directory(ffhelper SRC_FFHELPER)
 
 link_directories(${USER_FFMPEG_LIB_DIR})
@@ -29,9 +30,14 @@ link_libraries(swresample)
 include_directories(${USER_FFMPEG_INC_DIR})
 include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/ffprobe_demo)
+include_directories(${PROJECT_SOURCE_DIR}/ffplay_demo)
 include_directories(${PROJECT_SOURCE_DIR}/ffhelper)
 
 SET(CMAKE_BUILD_TYPE "Debug")
 # SET(CMAKE_BUILD_TYPE "Release")
 
-add_executable(${PROJECT_NAME} ${SRC_FFPROBE_DEMO} ${SRC_FFHELPER} ${SRC_ROOT})
+add_executable(${PROJECT_NAME} 
+    ${SRC_FFPROBE_DEMO} 
+    ${SRC_FFHELPER} 
+    ${SRC_FFPLAY_DEMO}
+    ${SRC_ROOT})
