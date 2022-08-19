@@ -3,6 +3,7 @@
 #include <stdint.h>
 #include <memory>
 #include <list>
+#include <string>
 
 #ifdef __cplusplus
 extern "C" 

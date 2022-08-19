@@ -26,7 +26,7 @@ public:
     typedef int(*cb_push_packet)(const AVPacket *data);
     typedef int(*cb_push_frame)(const AVFrame *frame);
 
-    class Callbacks
+    class CallBacks
     {
     public:
         cb_push_packet cb_push_packet_{nullptr};
@@ -36,7 +36,7 @@ public:
     class PlayContext;
     
 public:
-    FFPlayDemo(const std::string &filename, const Callbacks &cb);
+    FFPlayDemo(const std::string &filename, const CallBacks &cb);
     int init();
     int exec();
 
@@ -47,7 +47,7 @@ private:
     int toState(State state);
 private:
     std::string filename_;
-    std::shared_ptr<Callbacks> callbacks_;
+    std::shared_ptr<CallBacks> callbacks_;
     std::shared_ptr<InputFile> input_file_;
 
     std::shared_ptr<FFPlayDemoState> state_pause_;

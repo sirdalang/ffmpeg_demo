@@ -37,8 +37,9 @@ int probe_test(const char *char_filename)
 int play_test(const char *filename)
 {
     std::string str_filename(filename);
+    FFPlayDemo::CallBacks cbs;
 
-    FFPlayDemo player(str_filename);
+    FFPlayDemo player(str_filename, cbs);
 
     if (player.init() < 0)
     {
@@ -63,8 +64,8 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    // probe_test(argv[1]);
-    play_test(argv[1]);
+    probe_test(argv[1]);
+    // play_test(argv[1]);
 
     return 0;
 }

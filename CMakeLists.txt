@@ -11,8 +11,8 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/output)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/output)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/output)
 
-set(USER_FFMPEG_LIB_DIR /home/test/opensrc/ffmpeg/build/output/lib)
-set(USER_FFMPEG_INC_DIR /home/test/opensrc/ffmpeg/build/output/include)
+set(USER_FFMPEG_LIB_DIR ${PROJECT_SOURCE_DIR}/thd/ffmpeg/lib)
+set(USER_FFMPEG_INC_DIR ${PROJECT_SOURCE_DIR}/thd/ffmpeg/include)
 
 aux_source_directory(. SRC_ROOT)
 aux_source_directory(ffprobe_demo SRC_FFPROBE_DEMO)

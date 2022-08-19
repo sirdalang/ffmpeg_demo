@@ -173,7 +173,7 @@ void FFProbeDemo::getStreamInfo(MediaInfo &info)
                 addStreamInfo(stinfo, "sample_fmt", cstr ? cstr : UNKNOWN);
 
                 addStreamInfo(stinfo, "sample_rate", par->sample_rate);
-                addStreamInfo(stinfo, "channels", par->ch_layout.nb_channels);
+                // addStreamInfo(stinfo, "channels", par->ch_layout.nb_channels);
                 addStreamInfo(stinfo, "bits_per_sample", av_get_bits_per_sample(par->codec_id));
 
                 break;

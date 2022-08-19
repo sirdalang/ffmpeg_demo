@@ -7,13 +7,13 @@ NAMESPACE_FFMPEG_DEMO_BEGIN
 class FFPlayDemo::PlayContext
 {
 public:
-
 };
 
-FFPlayDemo::FFPlayDemo(const std::string &filename)
+FFPlayDemo::FFPlayDemo(const std::string &filename, const CallBacks &cb)
 {
     filename_ = filename;
     input_file_ = std::make_shared<InputFile>();
+    callbacks_ = std::make_shared<CallBacks>(cb);
 
     state_pause_ = std::make_shared<FFPlayDemoPauseState>(this);
     state_playing_ = std::make_shared<FFPlayDemoPlayingState>(this);
