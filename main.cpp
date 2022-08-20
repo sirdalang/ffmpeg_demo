@@ -34,10 +34,18 @@ int probe_test(const char *char_filename)
     return 0;
 }
 
+int packet_callback(const AVPacket *packet)
+{
+    printf ("packet: size=%d\n",
+        packet->size);
+    return 0;
+}
+
 int play_test(const char *filename)
 {
     std::string str_filename(filename);
     FFPlayDemo::CallBacks cbs;
+    cbs.cb_push_packet_ = packet_callback;
 
     FFPlayDemo player(str_filename, cbs);
 
@@ -64,8 +72,8 @@ int main(int argc, char *argv[])
         return 0;
     }
 
-    probe_test(argv[1]);
-    // play_test(argv[1]);
+    // probe_test(argv[1]);
+    play_test(argv[1]);
 
     return 0;
 }

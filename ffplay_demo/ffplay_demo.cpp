@@ -95,6 +95,7 @@ int FFPlayDemo::readFile()
 
     if (0 == ret)
     {
+        pushPacket(av_packet.get());
         return 1;
     }
     else if (AVERROR_EOF == ret)
@@ -137,6 +138,16 @@ int FFPlayDemo::toState(State state)
     }
 
     return 0;
+}
+
+int FFPlayDemo::pushPacket(const AVPacket *packet)
+{
+    if (callbacks_->cb_push_packet_)
+    {
+        return callbacks_->cb_push_packet_(packet);
+    }
+
+    return  0;
 }
 
 NAMESPACE_FFMPEG_DEMO_END
