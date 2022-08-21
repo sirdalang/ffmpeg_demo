@@ -7,6 +7,7 @@ NAMESPACE_FFMPEG_DEMO_BEGIN
 class FFPlayDemo::PlayContext
 {
 public:
+    bool config_enable_decode{true};
 };
 
 FFPlayDemo::FFPlayDemo(const std::string &filename, const CallBacks &cb)
@@ -14,6 +15,8 @@ FFPlayDemo::FFPlayDemo(const std::string &filename, const CallBacks &cb)
     filename_ = filename;
     input_file_ = std::make_shared<InputFile>();
     callbacks_ = std::make_shared<CallBacks>(cb);
+
+    play_ctx_ = std::make_shared<PlayContext>();
 
     state_pause_ = std::make_shared<FFPlayDemoPauseState>(this);
     state_playing_ = std::make_shared<FFPlayDemoPlayingState>(this);
@@ -96,6 +99,10 @@ int FFPlayDemo::readFile()
     if (0 == ret)
     {
         pushPacket(av_packet.get());
+        if (play_ctx_->config_enable_decode)
+        {
+            decodeFrame(av_packet.get());
+        }
         return 1;
     }
     else if (AVERROR_EOF == ret)
@@ -142,12 +149,19 @@ int FFPlayDemo::toState(State state)
 
 int FFPlayDemo::pushPacket(const AVPacket *packet)
 {
+    int ret = 0;
+
     if (callbacks_->cb_push_packet_)
     {
-        return callbacks_->cb_push_packet_(packet);
+        ret = callbacks_->cb_push_packet_(packet);
     }
 
-    return  0;
+    return  ret;
+}
+
+int FFPlayDemo::decodeFrame(const AVPacket *packet)
+{
+    if (packet->)
 }
 
 NAMESPACE_FFMPEG_DEMO_END

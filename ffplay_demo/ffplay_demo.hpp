@@ -46,6 +46,7 @@ private:
     int readFile();
     int toState(State state);
     int pushPacket(const AVPacket *packet);
+    int decodeFrame(const AVPacket *packet);
 private:
     std::string filename_;
     std::shared_ptr<CallBacks> callbacks_;
