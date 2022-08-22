@@ -43,6 +43,7 @@ public:
     int control(CtlType type);
 private:
     int openFile();
+    int setChannels();
     int readFile();
     int toState(State state);
     int pushPacket(const std::shared_ptr<WrapAVPacket> packet);
@@ -51,6 +52,10 @@ private:
     std::string filename_;
     std::shared_ptr<CallBacks> callbacks_;
     std::shared_ptr<InputFile> input_file_;
+
+    /* 解码：只需要一个视频和音频通道 */
+    std::shared_ptr<InputStream> is_video_;
+    std::shared_ptr<InputStream> is_audio_;
 
     std::shared_ptr<FFPlayDemoState> state_pause_;
     std::shared_ptr<FFPlayDemoState> state_playing_;

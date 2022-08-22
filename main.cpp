@@ -43,6 +43,15 @@ int packet_callback(std::shared_ptr<WrapAVPacket> av_packet)
     return 0;
 }
 
+int frame_callback(const std::shared_ptr<WrapAVFrame> av_frame)
+{
+    AVFrame *frame = av_frame->get();
+    printf ("frame: pkt_size=%d, w,h=%d,%d\n",
+        frame->pkt_size,
+        frame->width, frame->height);
+    return 0;
+}
+
 int play_test(const char *filename)
 {
     std::string str_filename(filename);
