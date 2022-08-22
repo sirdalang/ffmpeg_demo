@@ -161,7 +161,8 @@ int FFPlayDemo::pushPacket(const AVPacket *packet)
 
 int FFPlayDemo::decodeFrame(const AVPacket *packet)
 {
-    if (packet->)
+    // if (packet->)
+    return 0;
 }
 
 NAMESPACE_FFMPEG_DEMO_END

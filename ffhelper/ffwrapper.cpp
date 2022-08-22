@@ -169,12 +169,14 @@ int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &inp
 
     for (i = 0; i < ifile->fmt_ctx->get()->nb_streams; ++i)
     {
-        InputStream istream;
+        std::shared_ptr<InputStream> is;
+
+        is = std::make_shared<InputStream>();
 
         AVStream *stream = ifile->fmt_ctx->get()->streams[i];
         const AVCodec *codec = nullptr;
 
-        istream.st = stream;
+        is->st = stream;
 
         if (AV_CODEC_ID_PROBE == stream->codecpar->codec_id)
         {
@@ -191,16 +193,16 @@ int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &inp
             continue;
         }
 
-        istream.dec_ctx = std::make_shared<WrapAVCodecContext>(codec);
+        is->dec_ctx = std::make_shared<WrapAVCodecContext>(codec);
 
-        if (avcodec_parameters_to_context(istream.dec_ctx->get(),
+        if (avcodec_parameters_to_context(is->dec_ctx->get(),
                 stream->codecpar) < 0)
         {
             xerror("avcodec_parameters_to_context failed\n");
             break;
         }
 
-        if (avcodec_open2(istream.dec_ctx->get(), codec, nullptr) < 0)
+        if (avcodec_open2(is->dec_ctx->get(), codec, nullptr) < 0)
         {
             xerror ("Open codec for input stream %d failed\n",
                 stream->index);
@@ -208,7 +210,7 @@ int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &inp
             break;
         }
 
-        ifile->streams.push_back(istream);
+        ifile->streams.push_back(is);
 
         continue;
     }

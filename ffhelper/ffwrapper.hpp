@@ -19,7 +19,18 @@ extern "C"
 
 NAMESPACE_FFMPEG_DEMO_BEGIN
 
-class WrapAVCodecContext
+class UniqueObj
+{
+public:
+    UniqueObj() = default;
+    ~UniqueObj() = default;
+    UniqueObj(UniqueObj&) = delete;
+    // UniqueObj(UniqueObj&&) = delete;
+    UniqueObj& operator=(UniqueObj&) = delete;
+    // UniqueObj& operator=(UniqueObj&&) = delete;
+};
+
+class WrapAVCodecContext : public UniqueObj
 {
 public:
     WrapAVCodecContext(const AVCodec* codec);
@@ -28,12 +39,10 @@ public:
     AVCodecContext *get();
     AVCodecContext *codec_ctx{nullptr};
 private:
-    WrapAVCodecContext(WrapAVCodecContext&) = delete;
-    WrapAVCodecContext& operator=(WrapAVCodecContext&) = delete;
     AVCodecContext *codec_ctx_backup__{nullptr};
 };
 
-class WrapAVFormatContext
+class WrapAVFormatContext : public UniqueObj
 {
 public:
     enum ALLOC_SRC
@@ -56,18 +65,19 @@ private:
     AVFormatContext *fmt_ctx_backup__{nullptr};
 };
 
-class WrapAVPacket
+class WrapAVPacket : public UniqueObj
 {
 public:
     WrapAVPacket();
     ~WrapAVPacket();
+
     AVPacket *get();
 private:
     AVPacket *av_packet__{nullptr};
     AVPacket *av_packet_backup__{nullptr};
 };
 
-class WrapAVFrame
+class WrapAVFrame : public UniqueObj
 {
 public:
     WrapAVFrame();
@@ -78,26 +88,26 @@ private:
     AVFrame *av_frame_backup__{nullptr};
 };
 
-
-
-class InputStream 
+class InputStream : public UniqueObj
 {
 public:
+    InputStream() = default;
+
     // AVStream *st;
-    AVStream *st{nullptr};
+    AVStream *st{nullptr};  // a pointer to avformatcontext
 
     // AVCodecContext *dec_ctx;
     std::shared_ptr<WrapAVCodecContext> dec_ctx;
 };
 
-class InputFile 
+class InputFile : public UniqueObj
 {
 public:
     // AVFormatContext *fmt_ctx;
     std::shared_ptr<WrapAVFormatContext> fmt_ctx;
 
     // InputStream *streams;
-    std::list<InputStream> streams;
+    std::list<std::shared_ptr<InputStream>> streams;
 };
 
 int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &input_file);

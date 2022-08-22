@@ -36,8 +36,9 @@ int probe_test(const char *char_filename)
 
 int packet_callback(const AVPacket *packet)
 {
-    printf ("packet: size=%d\n",
-        packet->size);
+    printf ("packet: size=%d, stream=%d\n",
+        packet->size,
+        packet->stream_index);
     return 0;
 }
 

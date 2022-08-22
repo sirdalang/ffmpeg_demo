@@ -41,13 +41,15 @@ int FFProbeDemo::showStreams()
 
     for (auto it = ifile->streams.begin(); it != ifile->streams.end(); ++it)
     {
+        InputStream* is = it->get();
+
         AVCodecParameters *par = nullptr;
-        AVStream *stream = it->st;
+        AVStream *stream = is->st;
         AVCodecContext *dec_ctx = nullptr;
         const AVCodecDescriptor *cd;
 
         par = stream->codecpar;
-        dec_ctx = it->dec_ctx->get();
+        dec_ctx = is->dec_ctx->get();
         
         if ((cd = avcodec_descriptor_get(par->codec_id))) 
         {
@@ -93,12 +95,13 @@ void FFProbeDemo::getStreamInfo(MediaInfo &info)
     for (auto it = ifile->streams.begin(); it != ifile->streams.end(); ++it)
     {
         StreamInfo stinfo;
+        InputStream* is = it->get();
 
-        par = it->st->codecpar;
-        dec_ctx = it->dec_ctx->get();
+        par = is->st->codecpar;
+        dec_ctx = is->dec_ctx->get();
         
-        addStreamInfo(stinfo, "index", it->st->index);
-        addStreamInfo(stinfo, "id", it->st->id);
+        addStreamInfo(stinfo, "index", is->st->index);
+        addStreamInfo(stinfo, "id", is->st->id);
 
         if (cd = avcodec_descriptor_get(par->codec_id)) 
         {
@@ -180,18 +183,18 @@ void FFProbeDemo::getStreamInfo(MediaInfo &info)
             }
         }
 
-        addStreamInfo(stinfo, "r_frame_rate", it->st->r_frame_rate);
-        addStreamInfo(stinfo, "avg_frame_rate", it->st->avg_frame_rate);
-        addStreamInfo(stinfo, "time_base", it->st->time_base);
-        addStreamInfo(stinfo, "start_pts", it->st->start_time);
-        addStreamInfo(stinfo, "duration_ts", it->st->duration);
+        addStreamInfo(stinfo, "r_frame_rate", is->st->r_frame_rate);
+        addStreamInfo(stinfo, "avg_frame_rate", is->st->avg_frame_rate);
+        addStreamInfo(stinfo, "time_base", is->st->time_base);
+        addStreamInfo(stinfo, "start_pts", is->st->start_time);
+        addStreamInfo(stinfo, "duration_ts", is->st->duration);
 
         addStreamInfo(stinfo, "bit_rate", 
             par->bit_rate > 0 ? par->bit_rate : NUM_UNKNOWN);
         addStreamInfo(stinfo, "bits_per_raw_sample", 
             dec_ctx->bits_per_raw_sample > 0 ?
             dec_ctx->bits_per_raw_sample : NUM_UNKNOWN);
-        addStreamInfo(stinfo, "nb_frames", it->st->nb_frames);
+        addStreamInfo(stinfo, "nb_frames", is->st->nb_frames);
 
         snprintf (mainkey, sizeof(mainkey), "stream_index_%d", index);
         info.push_back(std::make_pair(std::string(mainkey), stinfo));
