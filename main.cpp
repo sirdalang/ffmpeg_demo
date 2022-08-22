@@ -34,8 +34,9 @@ int probe_test(const char *char_filename)
     return 0;
 }
 
-int packet_callback(const AVPacket *packet)
+int packet_callback(std::shared_ptr<WrapAVPacket> av_packet)
 {
+    AVPacket *packet = av_packet->get();
     printf ("packet: size=%d, stream=%d\n",
         packet->size,
         packet->stream_index);
@@ -61,7 +62,7 @@ int play_test(const char *filename)
     while (true)
     {
         player.exec();
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 

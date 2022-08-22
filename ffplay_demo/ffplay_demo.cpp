@@ -92,16 +92,17 @@ int FFPlayDemo::readFile()
     int ret = 0;
 
     AVFormatContext *av_fmt_ctx = input_file_->fmt_ctx->get();
-    WrapAVPacket av_packet;
+    // WrapAVPacket av_packet;
+    std::shared_ptr<WrapAVPacket> av_packet = std::make_shared<WrapAVPacket>();
 
-    ret = av_read_frame(av_fmt_ctx, av_packet.get());
+    ret = av_read_frame(av_fmt_ctx, av_packet->get());
 
     if (0 == ret)
     {
-        pushPacket(av_packet.get());
+        pushPacket(av_packet);
         if (play_ctx_->config_enable_decode)
         {
-            decodeFrame(av_packet.get());
+            decodeFrame(av_packet);
         }
         return 1;
     }
@@ -147,19 +148,19 @@ int FFPlayDemo::toState(State state)
     return 0;
 }
 
-int FFPlayDemo::pushPacket(const AVPacket *packet)
+int FFPlayDemo::pushPacket(std::shared_ptr<WrapAVPacket> av_packet)
 {
     int ret = 0;
 
     if (callbacks_->cb_push_packet_)
     {
-        ret = callbacks_->cb_push_packet_(packet);
+        ret = callbacks_->cb_push_packet_(av_packet);
     }
 
     return  ret;
 }
 
-int FFPlayDemo::decodeFrame(const AVPacket *packet)
+int FFPlayDemo::decodeFrame(std::shared_ptr<WrapAVPacket> av_packet)
 {
     // if (packet->)
     return 0;

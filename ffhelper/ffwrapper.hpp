@@ -25,9 +25,9 @@ public:
     UniqueObj() = default;
     ~UniqueObj() = default;
     UniqueObj(UniqueObj&) = delete;
-    // UniqueObj(UniqueObj&&) = delete;
+    UniqueObj(UniqueObj&&) = delete;
     UniqueObj& operator=(UniqueObj&) = delete;
-    // UniqueObj& operator=(UniqueObj&&) = delete;
+    UniqueObj& operator=(UniqueObj&&) = delete;
 };
 
 class WrapAVCodecContext : public UniqueObj

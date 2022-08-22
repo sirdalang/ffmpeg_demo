@@ -23,8 +23,8 @@ public:
         STOP,
     };
 
-    typedef int(*cb_push_packet)(const AVPacket *data);
-    typedef int(*cb_push_frame)(const AVFrame *frame);
+    typedef int(*cb_push_packet)(const std::shared_ptr<WrapAVPacket> packet);
+    typedef int(*cb_push_frame)(const std::shared_ptr<WrapAVFrame> packet);
 
     class CallBacks
     {
@@ -45,8 +45,8 @@ private:
     int openFile();
     int readFile();
     int toState(State state);
-    int pushPacket(const AVPacket *packet);
-    int decodeFrame(const AVPacket *packet);
+    int pushPacket(const std::shared_ptr<WrapAVPacket> packet);
+    int decodeFrame(const std::shared_ptr<WrapAVPacket> packet);
 private:
     std::string filename_;
     std::shared_ptr<CallBacks> callbacks_;
