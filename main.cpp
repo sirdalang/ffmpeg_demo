@@ -3,6 +3,7 @@
 
 #include "ffprobe_demo.hpp"
 #include "ffplay_demo.hpp"
+#include "sdli.hpp"
 
 USING_NAMESPACE_FFMPEG_DEMO
 
@@ -72,20 +73,32 @@ int play_test(const char *filename)
     while (true)
     {
         player.exec();
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+}
+
+int sdli_test()
+{
+    SDLI sdli;
+
+    return 0;
 }
 
 int main(int argc, char *argv[])
 {
+    const char* path = "D:\\demo.mkv";
+
+#if 0
     if (argc < 2)
     {
         printf ("Usage: %s <file>\n", argv[0]);
         return 0;
     }
+#endif 
 
     // probe_test(argv[1]);
-    play_test(argv[1]);
+    // play_test(path);
+    sdli_test();
 
     return 0;
 }

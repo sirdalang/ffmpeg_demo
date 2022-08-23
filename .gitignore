@@ -1,6 +1,9 @@
 .vscode/*
 build/*
 thd/*
+.vs/*
+out/*
+*.json
 
 
 # Prerequisites
