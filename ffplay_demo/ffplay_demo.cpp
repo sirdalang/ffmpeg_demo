@@ -200,10 +200,32 @@ int FFPlayDemo::decodeFrame(std::shared_ptr<WrapAVPacket> av_packet)
 {
     int ret = 0;
 
-    /* recv frames */
     std::shared_ptr<WrapAVFrame> vframe;
     vframe = std::make_shared<WrapAVFrame>();
 
+    xdebug("packet: stream=%d, size=%d\n",
+        av_packet->get()->stream_index,
+        av_packet->get()->size);
+
+    /* send packet */
+    if (av_packet->get()->stream_index == is_video_->st->index)
+    {
+        ret = avcodec_send_packet(is_video_->dec_ctx->get(), av_packet->get());
+        if (0 == ret)
+        {
+            xdebug("send packet suc\n");
+        }
+        else
+        {
+            xerror("send video packet failed, ret=%d\n", ret);
+        }
+    }
+    else if (av_packet->get()->stream_index == is_audio_->st->index)
+    {
+        // not decode audio
+    }
+
+    /* recv frames */
     while (true)
     {
         ret = avcodec_receive_frame(is_video_->dec_ctx->get(), vframe->get());
@@ -228,24 +250,6 @@ int FFPlayDemo::decodeFrame(std::shared_ptr<WrapAVPacket> av_packet)
                 break;
             }
         }
-    }
-
-    /* send packet */
-    if (av_packet->get()->stream_index == is_video_->st->index)
-    {
-        ret = avcodec_send_packet(is_video_->dec_ctx->get(), av_packet->get());
-        if (0 == ret)
-        {
-            xdebug("send packet suc\n");
-        }
-        else
-        {
-            xerror("send video packet failed, ret=%d\n", ret);
-        }
-    }
-    else if (av_packet->get()->stream_index == is_audio_->st->index)
-    {
-        // not decode audio
     }
 
     return 0;

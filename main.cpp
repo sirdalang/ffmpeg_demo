@@ -57,6 +57,7 @@ int play_test(const char *filename)
     std::string str_filename(filename);
     FFPlayDemo::CallBacks cbs;
     cbs.cb_push_packet_ = packet_callback;
+    cbs.cb_push_frame_ = frame_callback;
 
     FFPlayDemo player(str_filename, cbs);
 
