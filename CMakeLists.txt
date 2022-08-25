@@ -31,6 +31,7 @@ link_libraries(avcodec)
 link_libraries(avutil)
 link_libraries(swscale)
 link_libraries(swresample)
+link_libraries(SDL2)
 
 include_directories(${USER_FFMPEG_INC_DIR})
 include_directories(${USER_SDL_INC_DIR})

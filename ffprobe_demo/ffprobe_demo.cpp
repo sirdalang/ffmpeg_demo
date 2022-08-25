@@ -21,7 +21,7 @@ int FFProbeDemo::init()
     
     if (openFile() < 0)
     {
-        xerror("open file %s failed\n", filename);
+        xerror("open file %s failed", filename);
         return -1;
     }
 
@@ -53,14 +53,14 @@ int FFProbeDemo::showStreams()
         
         if ((cd = avcodec_descriptor_get(par->codec_id))) 
         {
-            xinfo("codec_name:%s\n", cd->name);
-            xinfo("codec_long_name:%s\n",
+            xinfo("codec_name:%s", cd->name);
+            xinfo("codec_long_name:%s",
                         cd->long_name ? cd->long_name : UNKNOWN);
         } 
         else 
         {
-            xinfo("codec_name:%s\n", UNKNOWN);
-            xinfo("codec_long_name:%s\n", UNKNOWN);
+            xinfo("codec_name:%s", UNKNOWN);
+            xinfo("codec_long_name:%s", UNKNOWN);
         }
     }
 

@@ -81,6 +81,10 @@ int sdli_test()
 {
     SDLI sdli;
 
+    sdli.init();
+
+    sdli.exec();
+
     return 0;
 }
 
