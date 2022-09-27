@@ -15,6 +15,7 @@ set(USER_FFMPEG_LIB_DIR ${PROJECT_SOURCE_DIR}/thd/ffmpeg/lib)
 set(USER_FFMPEG_INC_DIR ${PROJECT_SOURCE_DIR}/thd/ffmpeg/include)
 
 link_directories(${USER_FFMPEG_LIB_DIR})
+link_directories(${USER_SDL_LIB_DIR})
 
 link_libraries(avformat)
 link_libraries(avcodec)

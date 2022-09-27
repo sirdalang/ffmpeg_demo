@@ -9,7 +9,7 @@ WrapAVCodecContext::WrapAVCodecContext(const AVCodec* codec)
     codec_ctx = avcodec_alloc_context3(codec);
     if (nullptr == codec_ctx)
     {
-        xerror("alloc codec context failed\n");
+        xerror("alloc codec context failed");
     }
 
     codec_ctx_backup__ = codec_ctx;
@@ -19,7 +19,7 @@ WrapAVCodecContext::~WrapAVCodecContext()
 {
     if (codec_ctx_backup__ != codec_ctx)
     {
-        xerror("pointer changed\n");
+        xerror("pointer changed");
     }
 
     if (nullptr != codec_ctx)
@@ -38,7 +38,7 @@ WrapAVFormatContext::WrapAVFormatContext()
     fmt_ctx = avformat_alloc_context();
     if (nullptr == fmt_ctx)
     {
-        xerror("alloc format context failed\n");
+        xerror("alloc format context failed");
     }
     else
     {
@@ -51,7 +51,7 @@ WrapAVFormatContext::~WrapAVFormatContext()
 {
     if (fmt_ctx_backup__ != fmt_ctx)
     {
-        xerror("pointer changed\n");
+        xerror("pointer changed");
     }
 
     if (nullptr != fmt_ctx)
@@ -79,7 +79,7 @@ WrapAVPacket::WrapAVPacket()
     av_packet__ = av_packet_alloc();
     if (nullptr == av_packet__)
     {
-        xerror ("alloc packet failed\n");
+        xerror ("alloc packet failed");
     }
     av_packet_backup__ = av_packet__;
 }
@@ -88,7 +88,7 @@ WrapAVPacket::~WrapAVPacket()
 {
     if (av_packet__ != av_packet_backup__)
     {
-        xerror("pointer changed\n");
+        xerror("pointer changed");
     }
 
     if (nullptr != av_packet__)
@@ -109,7 +109,7 @@ WrapAVFrame::WrapAVFrame()
     av_frame__ = av_frame_alloc();
     if (nullptr == av_frame__)
     {
-        xerror("alloc frame failed\n");
+        xerror("alloc frame failed");
     }
     av_frame_backup__ = av_frame__;
 }
@@ -118,7 +118,7 @@ WrapAVFrame::~WrapAVFrame()
 {
     if (av_frame__ != av_frame_backup__)
     {
-        xerror("pointer changed\n");
+        xerror("pointer changed");
     }
 
     if (nullptr != av_frame__)
@@ -151,7 +151,7 @@ int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &inp
     if ((ret = avformat_open_input(&ifile->fmt_ctx->fmt_ctx, filename,
             iformat, &format_opts)) < 0)
     {
-        xerror("open input failed\n");
+        xerror("open input failed");
         return ret;
     }
     else
@@ -161,7 +161,7 @@ int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &inp
 
     if ((ret = avformat_find_stream_info(ifile->fmt_ctx->get(), nullptr)) < 0)
     {
-        xerror ("find stream info failed\n");
+        xerror ("find stream info failed");
         return ret;
     }
 
@@ -180,7 +180,7 @@ int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &inp
 
         if (AV_CODEC_ID_PROBE == stream->codecpar->codec_id)
         {
-            xerror("Failed to probe codec for input stream %d\n", 
+            xerror("Failed to probe codec for input stream %d", 
                 stream->index);
             continue;
         }
@@ -188,7 +188,7 @@ int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &inp
         codec = avcodec_find_decoder(stream->codecpar->codec_id);
         if (nullptr == codec)
         {
-            xerror("Unsupported codec with id %d for input stream %d\n",
+            xerror("Unsupported codec with id %d for input stream %d",
                 stream->codecpar->codec_id, stream->index);
             continue;
         }
@@ -198,13 +198,13 @@ int ffwrapper_open_file(const std::string &file, std::shared_ptr<InputFile> &inp
         if (avcodec_parameters_to_context(is->dec_ctx->get(),
                 stream->codecpar) < 0)
         {
-            xerror("avcodec_parameters_to_context failed\n");
+            xerror("avcodec_parameters_to_context failed");
             break;
         }
 
         if (avcodec_open2(is->dec_ctx->get(), codec, nullptr) < 0)
         {
-            xerror ("Open codec for input stream %d failed\n",
+            xerror ("Open codec for input stream %d failed",
                 stream->index);
             fail_flag = true;
             break;

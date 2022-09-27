@@ -34,7 +34,7 @@ int FFPlayDemo::init()
     
     if (openFile() < 0)
     {
-        xerror("open file %s failed\n", filename);
+        xerror("open file %s failed", filename);
         return -1;
     }
 
@@ -67,7 +67,7 @@ int FFPlayDemo::control(CtlType type)
         }
         default:
         {
-            xerror("not support\n");
+            xerror("not support");
             FF_DEMO_ASSERT(false);
             break;
         }
@@ -82,7 +82,7 @@ int FFPlayDemo::openFile()
 
     if (ret < 0)
     {
-        xerror("open file failed\n");
+        xerror("open file failed");
     }
     else
     {
@@ -102,13 +102,13 @@ int FFPlayDemo::setChannels()
         if(!is_video_
             && AVMEDIA_TYPE_VIDEO == it->get()->dec_ctx->get()->codec_type)
         {
-            xdebug("chosen video chn: %d\n", it->get()->st->index);
+            xdebug("chosen video chn: %d", it->get()->st->index);
             is_video_ = *it;
         }
         else if (!is_audio_
             && AVMEDIA_TYPE_AUDIO == it->get()->dec_ctx->get()->codec_type)
         {
-            xdebug("chosen audio chn: %d\n", it->get()->st->index);
+            xdebug("chosen audio chn: %d", it->get()->st->index);
             is_audio_ = *it;
         }
     }
@@ -123,7 +123,7 @@ int FFPlayDemo::setChannels()
  */
 int FFPlayDemo::readFile()
 {
-    xinfo("read file\n");
+    xinfo("read file");
 
     int ret = 0;
 
@@ -175,7 +175,7 @@ int FFPlayDemo::toState(State state)
         }
         default:
         {
-            xerror("not support\n");
+            xerror("not support");
             FF_DEMO_ASSERT(false);
             break;
         }
@@ -203,7 +203,7 @@ int FFPlayDemo::decodeFrame(std::shared_ptr<WrapAVPacket> av_packet)
     std::shared_ptr<WrapAVFrame> vframe;
     vframe = std::make_shared<WrapAVFrame>();
 
-    xdebug("packet: stream=%d, size=%d\n",
+    xdebug("packet: stream=%d, size=%d",
         av_packet->get()->stream_index,
         av_packet->get()->size);
 
@@ -213,11 +213,11 @@ int FFPlayDemo::decodeFrame(std::shared_ptr<WrapAVPacket> av_packet)
         ret = avcodec_send_packet(is_video_->dec_ctx->get(), av_packet->get());
         if (0 == ret)
         {
-            xdebug("send packet suc\n");
+            xdebug("send packet suc");
         }
         else
         {
-            xerror("send video packet failed, ret=%d\n", ret);
+            xerror("send video packet failed, ret=%d", ret);
         }
     }
     else if (av_packet->get()->stream_index == is_audio_->st->index)
@@ -231,7 +231,7 @@ int FFPlayDemo::decodeFrame(std::shared_ptr<WrapAVPacket> av_packet)
         ret = avcodec_receive_frame(is_video_->dec_ctx->get(), vframe->get());
         if (0 == ret)
         {
-            xdebug("got a frame\n");
+            xdebug("got a frame");
             if (callbacks_->cb_push_frame_)
             {
                 callbacks_->cb_push_frame_(vframe);
@@ -241,12 +241,12 @@ int FFPlayDemo::decodeFrame(std::shared_ptr<WrapAVPacket> av_packet)
         {
             if (AVERROR(EAGAIN) == ret)
             {
-                xdebug("no more frames of ch=%d\n", is_video_->st->index);
+                xdebug("no more frames of ch=%d", is_video_->st->index);
                 break;
             }
             else
             {
-                xerror("receive frame failed, ret=%d\n", ret);
+                xerror("receive frame failed, ret=%d", ret);
                 break;
             }
         }

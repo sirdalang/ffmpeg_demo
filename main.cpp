@@ -70,8 +70,19 @@ int play_test(const char *filename)
     while (true)
     {
         player.exec();
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+}
+
+int sdli_test()
+{
+    SDLI sdli;
+
+    sdli.init();
+
+    sdli.exec();
+
+    return 0;
 }
 #endif 
 
