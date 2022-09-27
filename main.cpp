@@ -1,11 +1,9 @@
 #include <thread>
 #include <chrono>
 
-#include "ffprobe_demo.hpp"
-#include "ffplay_demo.hpp"
+#include <gtest/gtest.h>
 
-USING_NAMESPACE_FFMPEG_DEMO
-
+#if 0
 int probe_test(const char *char_filename)
 {
     std::shared_ptr<FFProbeDemo::MediaInfo> mediainfo;
@@ -75,17 +73,22 @@ int play_test(const char *filename)
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
+#endif 
 
 int main(int argc, char *argv[])
 {
-    if (argc < 2)
-    {
-        printf ("Usage: %s <file>\n", argv[0]);
-        return 0;
-    }
+    // if (argc < 2)
+    // {
+    //     printf ("Usage: %s <file>\n", argv[0]);
+    //     return 0;
+    // }
 
-    // probe_test(argv[1]);
-    play_test(argv[1]);
+    // // probe_test(argv[1]);
+    // play_test(argv[1]);
+
+    printf("Running main() from %s\n", __FILE__);
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 
     return 0;
 }
