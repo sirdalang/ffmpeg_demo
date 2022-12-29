@@ -14,7 +14,11 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${PROJECT_BINARY_DIR}/output)
 set(USER_FFMPEG_LIB_DIR ${PROJECT_SOURCE_DIR}/thd/ffmpeg/lib)
 set(USER_FFMPEG_INC_DIR ${PROJECT_SOURCE_DIR}/thd/ffmpeg/include)
 
+set(USER_GTEST_LIB_DIR ${PROJECT_SOURCE_DIR}/thd/googletest/lib)
+set(USER_GTEST_INC_DIR ${PROJECT_SOURCE_DIR}/thd/googletest/include)
+
 link_directories(${USER_FFMPEG_LIB_DIR})
+link_directories(${USER_GTEST_LIB_DIR})
 link_directories(${USER_SDL_LIB_DIR})
 
 link_libraries(avformat)
@@ -26,6 +30,7 @@ link_libraries(gtest)
 link_libraries(pthread)
 
 include_directories(${USER_FFMPEG_INC_DIR})
+include_directories(${USER_GTEST_INC_DIR})
 include_directories(${PROJECT_SOURCE_DIR}/ffhelper)
 include_directories(${PROJECT_SOURCE_DIR}/include)
 

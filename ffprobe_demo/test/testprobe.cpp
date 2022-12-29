@@ -32,6 +32,8 @@ TEST(TestProbe, BasicTest)
                 it_str->second.c_str());
         }
     }
+
+    EXPECT_TRUE(info->size() != 0);
 }
 
 }
