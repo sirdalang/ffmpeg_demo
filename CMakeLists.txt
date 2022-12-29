@@ -33,8 +33,8 @@ SET(HELPER_DIR ${PROJECT_SOURCE_DIR}/ffhelper)
 
 aux_source_directory(${HELPER_DIR} HELPER_SRC)
 
-SET(CMAKE_BUILD_TYPE "Debug")
+# SET(CMAKE_BUILD_TYPE "Debug")
 # SET(CMAKE_BUILD_TYPE "Release")
 
 add_subdirectory(ffprobe_demo)
-# add_subdirectory(ffplay_demo)
+add_subdirectory(ffplay_demo)

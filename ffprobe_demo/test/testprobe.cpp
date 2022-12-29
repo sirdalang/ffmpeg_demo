@@ -7,7 +7,7 @@
 namespace 
 {
 
-const std::string video_file_name = "/home/test/video/demo.MOV";
+const std::string video_file_name = "../panda.mp4";
 
 TEST(TestProbe, BasicTest)
 {

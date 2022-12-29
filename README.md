@@ -3,10 +3,31 @@ Some ffmpeg demos. May be useful!
 
 ## build ffmpeg
 
+```bash
 ubuntu/x64
 ../ffmpeg/configure --prefix=$(pwd)/output  --disable-x86asm --disable-stripping --disable-static --enable-shared --disable-autodetect
+```
 
+or
+
+```bash
 sudo apt-get install ffmpeg libavformat-dev libavcodec-dev libavutil-dev libswscale-dev libswresample-dev -y
+```
+
+```bash
+copy libfolder/.h thd/ffmpeg/include
+copy .so thd/ffmpeg/lib
+cd thd/ffmpeg/lib
+export LD_LIBRARY_PATH=$(pwd):$LD_LIBRARY_PATH
+```
+
+## build this
+
+```bash
+cd build
+cmake ..
+make 
+```
 
 ## valgrind
 

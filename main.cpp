@@ -88,15 +88,6 @@ int sdli_test()
 
 int main(int argc, char *argv[])
 {
-    // if (argc < 2)
-    // {
-    //     printf ("Usage: %s <file>\n", argv[0]);
-    //     return 0;
-    // }
-
-    // // probe_test(argv[1]);
-    // play_test(argv[1]);
-
     printf("Running main() from %s\n", __FILE__);
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
